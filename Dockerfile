@@ -1,11 +1,6 @@
-FROM docker.io/python:3.9-alpine
+FROM docker.io/library/almalinux:9
 
-COPY . /build
-WORKDIR /build
-
-RUN apk --update add --no-cache --virtual .build-deps postgresql-dev && \
-    python setup.py install && \
-    apk --purge del .build-deps && \
-    apk --update add --no-cache postgresql-libs postgresql-client
+RUN dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+RUN dnf -qy module disable postgresql && dnf install -y pg_chameleon
 
 ENTRYPOINT ["chameleon"]
